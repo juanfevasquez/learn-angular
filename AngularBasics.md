@@ -41,10 +41,10 @@ So, let's check an example of how we connect our html and our angular app throug
 
 ```
 ```javascript
-var myApp = angular.module(“myApp”, []);
+var myApp = angular.module("myApp", []);
 
-myApp.controller(“MyController”, function() {
-
+myApp.controller("MyController", function() {
+	console.log("Hello Angular App!");
 });
 ```
 
@@ -86,8 +86,9 @@ Angular uses Dependency Injection A LOT
 
 
 ## The Scope Service
+
 Scope is something that everyone talks about when refering to AngularJS, yet, few seem to understand really what it is.
-Scope is an object and like any object you assign properties and methods any time you want.
+To understand Scope we need to use it and to use we must inject it into our code:
 ```javascript
 
 var myApp = angular.module("myApp", []);
@@ -97,3 +98,88 @@ myApp.controller("MyController", function($scope) {
 })
 
 ```
+Scope is an object and like any object you assign properties and methods any time you want.
+```javascript
+
+var myApp = angular.module("myApp", []);
+
+myApp.controller("MyController", function($scope) {
+	$scope.name = "Juanfe";
+	$scope.something = "I don\'t play pokemon go";
+	console.log($scope);
+});
+
+```
+Now because we are linking our code to an specific part of our html, the $scope and its information will only be available to that part of our html only:
+```html
+
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+	<meta charset="utf-8">
+	<title>Angular Basic Architecture</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+</head>
+<body>
+<div class="container" ng-controller="MyController">
+	<h1>{{name}}</h1>
+</div>
+
+<script src="example02.js"></script>
+</body>
+</html>
+
+```
+
+## Injecting Other Services
+
+In Angular, not every functionality comes with the main code.  Angular is segmented and only provides a core functionality with the main angular.js code.
+There are other services that you need to call if you need them, let's check an example.
+
+For this example we will be using a service called ngMessages.
+
+To use this extra-service you have to inject it into our main module:
+```javascript
+
+var myApp = angular.module("myApp", ['ngMessages']);
+
+myApp.controller("MyController", function() {
+	
+});
+
+```
+
+Checking the documentation, we are provided with lots of examples of how we can use the ngMessages service in our html:
+```html
+
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+	<meta charset="utf-8">
+	<title>Angular Basic Architecture</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+	<script src="https://code.angularjs.org/1.5.8/angular-messages.js"></script>
+</head>
+<body>
+<div class="container" ng-controller="MyController">
+	<form name="myForm">
+		<label>Enter text:
+			<input type="email" ng-model="field" name="myField" required maxlength="15" />
+		</label>
+		<div ng-messages="myForm.myField.$error" role="alert">
+			<div ng-message="required">Please enter a value for this field.</div>
+			<div ng-message="email">This field must be a valid email address.</div>
+			<div ng-message="maxlength">This field can be at most 15 characters long.</div>
+		</div>	
+	</form>
+</div>
+
+<script src="example03.js"></script>
+</body>
+</html>
+
+```
+And just like that, we have form validation :)
+
+## Dependency Injection and Minification
+
